@@ -1,0 +1,35 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SplitteBitte</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <h1>SplitteBitte - Group Order Sharing</h1>
+
+    <!-- Authentication Section -->
+    <div id="auth-section">
+        <h2>Login or Register</h2>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button id="register-btn">Register</button>
+        <button id="login-btn">Login</button>
+        <button id="logout-btn" style="display:none;">Logout</button>
+    </div>
+
+    <!-- Group Chat Section -->
+    <div id="chat-section" style="display:none;">
+        <h2>Group Chat</h2>
+        <div id="chat-box"></div>
+        <input type="text" id="message-input" placeholder="Type a message...">
+        <button id="send-btn">Send</button>
+    </div>
+
+    <script type="module" src="assets/js/firebase-config.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
