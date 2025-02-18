@@ -1,35 +1,45 @@
-<!-- index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SplitteBitte</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SplitteBitte - Group Order Chat</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
-    <h1>SplitteBitte - Group Order Sharing</h1>
+  <div class="container">
+    <header>
+      <h1>SplitteBitte</h1>
+      <p>Group Order Sharing Platform</p>
+    </header>
 
     <!-- Authentication Section -->
-    <div id="auth-section">
-        <h2>Login or Register</h2>
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Password">
-        <button id="register-btn">Register</button>
-        <button id="login-btn">Login</button>
-        <button id="logout-btn" style="display:none;">Logout</button>
-    </div>
+    <section id="auth-section" class="card">
+      <h2>User Authentication</h2>
+      <div class="auth-forms">
+        <input type="email" id="email" placeholder="Enter your email" required />
+        <input type="password" id="password" placeholder="Enter your password" required />
+        <div class="auth-buttons">
+          <button id="register-btn" class="btn">Register</button>
+          <button id="login-btn" class="btn">Login</button>
+          <button id="logout-btn" class="btn" style="display: none;">Logout</button>
+        </div>
+      </div>
+    </section>
 
-    <!-- Group Chat Section -->
-    <div id="chat-section" style="display:none;">
-        <h2>Group Chat</h2>
-        <div id="chat-box"></div>
-        <input type="text" id="message-input" placeholder="Type a message...">
-        <button id="send-btn">Send</button>
-    </div>
+    <!-- Chat Section -->
+    <section id="chat-section" class="card" style="display: none;">
+      <h2>Group Chat</h2>
+      <div id="chat-box"></div>
+      <div class="chat-input-container">
+        <input type="text" id="message-input" placeholder="Type your message here" />
+        <button id="send-btn" class="btn">Send</button>
+      </div>
+    </section>
+  </div>
 
-    <script type="module" src="assets/js/firebase-config.js"></script>
-    <script type="module" src="assets/js/main.js"></script>
+  <!-- Load Firebase configuration and main JavaScript (as modules) -->
+  <script type="module" src="assets/js/firebase-config.js"></script>
+  <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
