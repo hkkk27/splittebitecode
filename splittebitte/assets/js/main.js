@@ -1,7 +1,19 @@
 // assets/js/main.js
 import { auth, db } from "./firebase-config.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  onAuthStateChanged, 
+  signOut 
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { 
+  collection, 
+  addDoc, 
+  onSnapshot, 
+  query, 
+  orderBy, 
+  serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 // DOM Elements
 const emailInput = document.getElementById("email");
@@ -10,64 +22,96 @@ const registerBtn = document.getElementById("register-btn");
 const loginBtn = document.getElementById("login-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const chatSection = document.getElementById("chat-section");
+const chatBox = document.getElementById("chat-box");
 const messageInput = document.getElementById("message-input");
 const sendBtn = document.getElementById("send-btn");
-const chatBox = document.getElementById("chat-box");
 
 // Register User
-registerBtn.addEventListener("click", () => {
-    createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
-        .then(() => alert("Registered Successfully!"))
-        .catch(err => alert(err.message));
+registerBtn.addEventListener("click", async () => {
+  try {
+    await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+    alert("Registration successful!");
+  } catch (error) {
+    alert("Registration error: " + error.message);
+    console.error("Registration error:", error);
+  }
 });
 
 // Login User
-loginBtn.addEventListener("click", () => {
-    signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
-        .then(() => alert("Logged In Successfully!"))
-        .catch(err => alert(err.message));
+loginBtn.addEventListener("click", async () => {
+  try {
+    await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+    alert("Login successful!");
+  } catch (error) {
+    alert("Login error: " + error.message);
+    console.error("Login error:", error);
+  }
 });
 
 // Logout User
-logoutBtn.addEventListener("click", () => {
-    signOut(auth).then(() => alert("Logged Out!"));
+logoutBtn.addEventListener("click", async () => {
+  try {
+    await signOut(auth);
+    alert("Logged out successfully!");
+  } catch (error) {
+    alert("Logout error: " + error.message);
+    console.error("Logout error:", error);
+  }
 });
 
-// Auth State Change
-onAuthStateChanged(auth, user => {
-    if (user) {
-        chatSection.style.display = "block";
-        logoutBtn.style.display = "inline";
-        emailInput.style.display = "none";
-        passwordInput.style.display = "none";
-        registerBtn.style.display = "none";
-        loginBtn.style.display = "none";
-
-        // Real-time Chat
-        const q = query(collection(db, "messages"), orderBy("timestamp"));
-        onSnapshot(q, snapshot => {
-            chatBox.innerHTML = "";
-            snapshot.forEach(doc => {
-                chatBox.innerHTML += `<p>${doc.data().text}</p>`;
-            });
-        });
-    } else {
-        chatSection.style.display = "none";
-        logoutBtn.style.display = "none";
-        emailInput.style.display = "block";
-        passwordInput.style.display = "block";
-        registerBtn.style.display = "inline";
-        loginBtn.style.display = "inline";
-    }
+// Monitor authentication state changes
+onAuthStateChanged(auth, (user) => {
+  console.log("Auth state changed:", user);
+  if (user) {
+    // User is logged in: show chat section and hide auth fields
+    chatSection.style.display = "block";
+    logoutBtn.style.display = "inline-block";
+    emailInput.style.display = "none";
+    passwordInput.style.display = "none";
+    registerBtn.style.display = "none";
+    loginBtn.style.display = "none";
+    // Load chat messages in real time
+    loadChatMessages();
+  } else {
+    // User is logged out: show auth fields and hide chat
+    chatSection.style.display = "none";
+    logoutBtn.style.display = "none";
+    emailInput.style.display = "block";
+    passwordInput.style.display = "block";
+    registerBtn.style.display = "inline-block";
+    loginBtn.style.display = "inline-block";
+  }
 });
 
-// Send Message
+// Load and display chat messages in real time
+function loadChatMessages() {
+  const messagesQuery = query(collection(db, "messages"), orderBy("timestamp"));
+  onSnapshot(messagesQuery, (snapshot) => {
+    chatBox.innerHTML = ""; // Clear previous messages
+    snapshot.forEach((doc) => {
+      const messageData = doc.data();
+      const messageElement = document.createElement("p");
+      messageElement.textContent = `${messageData.sender || "Anonymous"}: ${messageData.text}`;
+      chatBox.appendChild(messageElement);
+    });
+    // Auto-scroll to the bottom of the chat box
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+}
+
+// Send message
 sendBtn.addEventListener("click", async () => {
-    if (messageInput.value.trim()) {
-        await addDoc(collection(db, "messages"), {
-            text: messageInput.value,
-            timestamp: Date.now()
-        });
-        messageInput.value = "";
-    }
+  const text = messageInput.value.trim();
+  if (text === "") return; // Prevent sending empty messages
+  try {
+    await addDoc(collection(db, "messages"), {
+      text: text,
+      sender: auth.currentUser ? auth.currentUser.email : "Anonymous",
+      timestamp: serverTimestamp()
+    });
+    messageInput.value = ""; // Clear the input field
+  } catch (error) {
+    alert("Error sending message: " + error.message);
+    console.error("Error sending message:", error);
+  }
 });
