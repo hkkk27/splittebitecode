@@ -1,24 +1,21 @@
 // assets/js/firebase-config.js
-
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-// Your Firebase configuration
+// Replace the values below with your Firebase project's configuration details
 const firebaseConfig = {
-  apiKey: "AIzaSyDbetMBpDXXJ-s05znVWb51XoNdoe5DZRE",
-  authDomain: "splittebitte-69fd3.firebaseapp.com",
-  projectId: "splittebitte-69fd3",
-  storageBucket: "splittebitte-69fd3.appspot.com",
-  messagingSenderId: "963092156062",
-  appId: "1:963092156062:web:72c027c9f056e59e21f58f",
-  measurementId: "G-49E5G7G2B2"
+  apiKey: "YOUR_API_KEY_HERE",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
+  measurementId: "YOUR_MEASUREMENT_ID"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-const auth = getAuth();
-const db = getFirestore();
+export const auth = getAuth();
+export const db = getFirestore();
